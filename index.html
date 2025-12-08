@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arusuvai | Restaurant Billing</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" referrerpolicy="no-referrer"
+    defer></script>
+</head>
+
+<body>
+  <!-- Login Page -->
+  <div id="login-page" class="login-page">
+    <div class="login-container">
+      <div class="login-brand">
+        <span class="brand__icon">🍽️</span>
+        <h1>Arusvai</h1>
+        <p>Restaurant Billing System</p>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Login</button>
+        <button class="auth-tab" data-tab="signup">Create Account</button>
+      </div>
+
+      <form id="login-form" class="login-form active">
+        <h2>Login</h2>
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" name="email" required placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" required placeholder="Enter your password" />
+        </div>
+        <button type="submit" class="btn btn--primary btn--full">Login</button>
+      </form>
+
+      <form id="signup-form" class="signup-form">
+        <h2>Create Account</h2>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" name="email" required placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" name="password" required placeholder="Create a password"
+            minlength="6" />
+        </div>
+        <div class="form-group">
+          <label for="signup-role">Account Type</label>
+          <select id="signup-role" name="role" required>
+            <option value="">Select account type</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn--primary btn--full">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App (Hidden until login) -->
+  <div id="app-container" class="app-container" style="display: none;">
+    <header class="navbar">
+      <div class="navbar__brand">
+        <span class="brand__icon">🍽️</span>
+        <span class="brand__text">Arusuvai</span>
+        <span id="restaurant-status" class="status-badge status-badge--closed">Closed</span>
+      </div>
+      <nav class="navbar__links" id="navbar-links">
+        <a href="#menu" class="nav-link active" data-section="menu">Home</a>
+        <a href="#cart" class="nav-link user-only" data-section="cart">Cart</a>
+        <a href="#favorites" class="nav-link user-only" data-section="favorites">Favorites</a>
+        <a href="#orders" class="nav-link user-only" data-section="orders">My Orders</a>
+        <a href="#admin" class="nav-link admin-only" data-section="admin">Manage Menu</a>
+        <a href="#sales" class="nav-link admin-only" data-section="sales">Sales</a>
+      </nav>
+      <div class="navbar__actions">
+        <button class="navbar__cart user-only" data-section="cart">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+        <button id="logout-btn" class="btn btn--ghost btn--sm">Logout</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="menu" class="page-section page-section--active">
+        <div class="section-header">
+          <h1>Today's Specials</h1>
+          <p>Select your favorite dishes and add them to your cart.</p>
+        </div>
+        <div id="menu-grid" class="card-grid" aria-live="polite"></div>
+      </section>
+
+      <section id="cart" class="page-section user-only">
+        <div class="section-header">
+          <h1>Your Cart</h1>
+          <p>Review items, adjust quantities, and proceed to checkout.</p>
+        </div>
+        <div class="cart-container">
+          <table class="cart-table" aria-describedby="cart-total">
+            <thead>
+              <tr>
+                <th scope="col">Dish</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Subtotal</th>
+                <th scope="col" class="sr-only">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="cart-items" aria-live="polite"></tbody>
+          </table>
+          <div class="cart-summary">
+            <div class="cart-total">
+              <span>Total</span>
+              <strong id="cart-total">₹0.00</strong>
+            </div>
+            <button id="checkout-btn" class="btn btn--primary">
+              Checkout
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="favorites" class="page-section user-only">
+        <div class="section-header">
+          <h1>My Favorites</h1>
+          <p>Your favorite dishes for quick access.</p>
+        </div>
+        <div id="favorites-grid" class="card-grid" aria-live="polite"></div>
+      </section>
+
+      <section id="orders" class="page-section user-only">
+        <div class="section-header">
+          <h1>My Orders</h1>
+          <p>View your order history and previous bills.</p>
+        </div>
+        <div id="orders-list" class="orders-list"></div>
+      </section>
+
+      <section id="admin" class="page-section admin-only">
+        <div class="section-header">
+          <h1>Manage Menu</h1>
+          <p>Add, edit, or remove dishes to keep the menu up to date.</p>
+        </div>
+
+        <div class="admin-grid">
+          <form id="dish-form" class="card">
+            <h2 id="form-title">Add New Dish</h2>
+            <input type="hidden" id="dish-id" />
+            <label for="dish-name">Dish Name</label>
+            <input type="text" id="dish-name" name="dishName" placeholder="e.g., Spicy Ramen" required />
+            <label for="dish-price">Price (INR)</label>
+            <input type="number" id="dish-price" name="dishPrice" min="0" step="0.01" placeholder="12.95" required />
+            <label for="dish-image">Image URL</label>
+            <input type="url" id="dish-image" name="dishImage" placeholder="images/dish.jpg" required />
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary">Save Dish</button>
+              <button type="reset" class="btn btn--ghost" id="cancel-edit">
+                Cancel
+              </button>
+            </div>
+          </form>
+
+          <div class="card admin-list">
+            <div class="admin-list__header">
+              <h2>Current Dishes</h2>
+              <p>Click an item to edit or remove it.</p>
+            </div>
+            <ul id="admin-dish-list" class="admin-dish-list"></ul>
+          </div>
+        </div>
+
+        <div class="admin-controls">
+          <div class="card">
+            <h2>Shop Controls</h2>
+            <div class="control-group">
+              <label>Shop Status</label>
+              <button id="toggle-restaurant-btn" class="btn btn--primary">Open Shop</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sales" class="page-section admin-only">
+        <div class="section-header">
+          <h1>Sales Analytics</h1>
+          <p>View sales reports and analytics.</p>
+        </div>
+
+        <div class="sales-grid">
+          <div class="card">
+            <h2>Today Sales</h2>
+            <div id="today-sales" class="sales-stat">
+              <div class="sales-amount" id="today-amount">₹0</div>
+              <div class="sales-count" id="today-count">0 orders</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Previous Day Sales</h2>
+            <div id="daily-sales" class="sales-stat">
+              <div class="sales-amount" id="daily-amount">₹0</div>
+              <div class="sales-count" id="daily-count">0 orders</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>This Month Sales</h2>
+            <div id="this-month-sales" class="sales-stat">
+              <div class="sales-amount" id="this-month-amount">₹0</div>
+              <div class="sales-count" id="this-month-count">0 orders</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Previous Month Sales</h2>
+            <div id="monthly-sales" class="sales-stat">
+              <div class="sales-amount" id="monthly-amount">₹0</div>
+              <div class="sales-count" id="monthly-count">0 orders</div>
+            </div>
+          </div>
+
+          <div class="card card--full">
+            <h2>Monthly Sales Chart</h2>
+            <canvas id="sales-chart" width="400" height="200"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <span id="year"></span> Arusuvai. All rights reserved.</p>
+    </footer>
+  </div>
+  <div id="dish-modal" class="modal" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-action="close-modal"></div>
+    <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal__close" aria-label="Close modal" data-action="close-modal">×</button>
+      <div class="modal__image-wrapper">
+        <img id="modal-image" src="" alt="" />
+      </div>
+      <div class="modal__details">
+        <h2 id="modal-title" class="modal__title"></h2>
+        <p id="modal-price" class="modal__price"></p>
+        <p id="modal-description" class="modal__description"></p>
+
+        <div class="modal__section">
+          <h3>Ingredients</h3>
+          <p id="modal-ingredients" class="modal__text"></p>
+        </div>
+
+        <div class="modal__section">
+          <h3>Nutrition Facts</h3>
+          <table class="nutrition-table">
+            <tbody id="modal-nutrition"></tbody>
+          </table>
+        </div>
+
+        <button id="modal-add-btn" class="btn btn--primary btn--full">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="assets/app.js" defer></script>
+</body>
+
+</html>
