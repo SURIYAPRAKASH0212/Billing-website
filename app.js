@@ -337,7 +337,7 @@ const state = {
   currentRole: null,
   currentEmail: null,
   orders: [],
-  restaurantOpen: false,
+  restaurantOpen: true,
   salesChart: null,
   favorites: {},
   users: {},
@@ -481,7 +481,7 @@ function loadState() {
 
   state.cart = storedCart ? JSON.parse(storedCart) : {};
   state.orders = storedOrders ? JSON.parse(storedOrders) : [];
-  state.restaurantOpen = storedStatus ? JSON.parse(storedStatus) : false;
+  state.restaurantOpen = storedStatus ? JSON.parse(storedStatus) : true;
   state.users = storedUsers ? JSON.parse(storedUsers) : {};
   state.favorites = storedFavorites ? JSON.parse(storedFavorites) : {};
 
@@ -1573,6 +1573,18 @@ function init() {
       });
     });
   }
+
+  // Sync restaurant status across tabs
+  window.addEventListener('storage', (event) => {
+    if (event.key === STORAGE_KEYS.restaurantStatus) {
+      const isOpen = JSON.parse(event.newValue);
+      state.restaurantOpen = isOpen;
+      updateRestaurantStatus();
+
+      const statusText = isOpen ? 'OPEN' : 'CLOSED';
+      showToast(`Shop status updated: ${statusText}`);
+    }
+  });
 
   initNavigation();
   attachFormHandlers();
