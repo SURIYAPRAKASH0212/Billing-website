@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Naanz | Restaurant Billing</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="responsive_styles_chunk.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -62,8 +63,11 @@
       <div class="navbar__brand">
         <span class="brand__icon">🍽️</span>
         <span class="brand__text">Naanzy</span>
-        <span id="restaurant-status" class="status-badge status-badge--closed">Closed</span>
+        <span id="restaurant-status" class="status-badge status-badge--open">Open</span>
       </div>
+      <button class="navbar__toggle" id="navbar-toggle" aria-label="Toggle navigation">
+        <span class="hamburger"></span>
+      </button>
       <nav class="navbar__links" id="navbar-links">
         <a href="#menu" class="nav-link active" data-section="menu">Home</a>
         <a href="#cart" class="nav-link user-only" data-section="cart">Cart</a>
