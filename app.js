@@ -390,6 +390,7 @@ const elements = {
   modalNutrition: document.getElementById('modal-nutrition'),
   modalAddBtn: document.getElementById('modal-add-btn'),
   modalCloseBtns: document.querySelectorAll('[data-action="close-modal"]'),
+  clearOrdersBtn: document.getElementById('clear-orders-btn'),
 };
 
 const formatCurrency = (value) =>
@@ -429,6 +430,25 @@ function showSection(targetId) {
 }
 
 function initNavigation() {
+  // Mobile Menu Logic
+  const navbarToggle = document.getElementById('navbar-toggle');
+  const navbarLinks = document.getElementById('navbar-links');
+
+  if (navbarToggle && navbarLinks) {
+    navbarToggle.addEventListener('click', () => {
+      navbarLinks.classList.toggle('active');
+      navbarToggle.classList.toggle('active');
+    });
+
+    // Close menu when a link is clicked
+    navbarLinks.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navbarLinks.classList.remove('active');
+        navbarToggle.classList.remove('active');
+      });
+    });
+  }
+
   elements.navLinks.forEach((link) => {
     link.addEventListener('click', (event) => {
       event.preventDefault();
@@ -1028,6 +1048,17 @@ function handleLogin(event) {
     return;
   }
 
+  // Hardcoded Admin Logic
+  if (email === 'suriya2274@gmail.com' && password === '12345678') {
+    state.currentUser = email;
+    state.currentEmail = email;
+    state.currentRole = 'admin';
+    persistAuth();
+    showApp();
+    showToast('Welcome Admin!');
+    return;
+  }
+
   // Check if user exists in database
   const user = state.users[email];
   if (!user || user.password !== password) {
@@ -1049,7 +1080,7 @@ function handleSignup(event) {
 
   const email = document.getElementById('signup-email').value.trim().toLowerCase();
   const password = document.getElementById('signup-password').value;
-  const role = document.getElementById('signup-role').value;
+  const role = 'user'; // Default to user, admin is hardcoded
 
   if (!email || !password || !role) {
     showToast('Please fill in all fields.');
@@ -1100,7 +1131,6 @@ function handleLogout() {
   document.getElementById('login-password').value = '';
   document.getElementById('signup-email').value = '';
   document.getElementById('signup-password').value = '';
-  document.getElementById('signup-role').value = '';
 }
 
 function switchAuthTab(tabName) {
@@ -1307,6 +1337,19 @@ function renderOrders() {
     `
     )
     .join('');
+}
+
+function clearOrders() {
+  if (!state.currentEmail) return;
+
+  // Filter out orders that belong to the current user
+  state.orders = state.orders.filter(
+    (order) => order.userId !== state.currentEmail && order.userId !== state.currentUser
+  );
+
+  persistState();
+  renderOrders();
+  showToast('Order history cleared.');
 }
 
 // Restaurant Status Functions
@@ -1536,6 +1579,10 @@ function init() {
 
   if (elements.checkoutBtn) {
     elements.checkoutBtn.addEventListener('click', handleCheckout);
+  }
+
+  if (elements.clearOrdersBtn) {
+    elements.clearOrdersBtn.addEventListener('click', clearOrders);
   }
 }
 

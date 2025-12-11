@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arusuvai | Restaurant Billing</title>
-  <link rel="stylesheet" href="assets/styles.css" />
+  <title>Naanz | Restaurant Billing</title>
+  <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -19,7 +19,7 @@
     <div class="login-container">
       <div class="login-brand">
         <span class="brand__icon">🍽️</span>
-        <h1>Arusvai</h1>
+        <h1>Naanzy</h1>
         <p>Restaurant Billing System</p>
       </div>
       <div class="auth-tabs">
@@ -51,14 +51,6 @@
           <input type="password" id="signup-password" name="password" required placeholder="Create a password"
             minlength="6" />
         </div>
-        <div class="form-group">
-          <label for="signup-role">Account Type</label>
-          <select id="signup-role" name="role" required>
-            <option value="">Select account type</option>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
         <button type="submit" class="btn btn--primary btn--full">Create Account</button>
       </form>
     </div>
@@ -69,7 +61,7 @@
     <header class="navbar">
       <div class="navbar__brand">
         <span class="brand__icon">🍽️</span>
-        <span class="brand__text">Arusuvai</span>
+        <span class="brand__text">Naanzy</span>
         <span id="restaurant-status" class="status-badge status-badge--closed">Closed</span>
       </div>
       <nav class="navbar__links" id="navbar-links">
@@ -140,6 +132,7 @@
         <div class="section-header">
           <h1>My Orders</h1>
           <p>View your order history and previous bills.</p>
+          <button id="clear-orders-btn" class="btn btn--ghost btn--sm" style="margin-top: 1rem;">Clear History</button>
         </div>
         <div id="orders-list" class="orders-list"></div>
       </section>
@@ -236,42 +229,14 @@
     </main>
 
     <footer class="footer">
-      <p>&copy; <span id="year"></span> Arusuvai. All rights reserved.</p>
+      <p>&copy; <span id="year"></span> Naanzy. All rights reserved.</p>
     </footer>
-  </div>
-  <div id="dish-modal" class="modal" aria-hidden="true">
-    <div class="modal__overlay" tabindex="-1" data-action="close-modal"></div>
-    <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button class="modal__close" aria-label="Close modal" data-action="close-modal">×</button>
-      <div class="modal__image-wrapper">
-        <img id="modal-image" src="" alt="" />
-      </div>
-      <div class="modal__details">
-        <h2 id="modal-title" class="modal__title"></h2>
-        <p id="modal-price" class="modal__price"></p>
-        <p id="modal-description" class="modal__description"></p>
-
-        <div class="modal__section">
-          <h3>Ingredients</h3>
-          <p id="modal-ingredients" class="modal__text"></p>
-        </div>
-
-        <div class="modal__section">
-          <h3>Nutrition Facts</h3>
-          <table class="nutrition-table">
-            <tbody id="modal-nutrition"></tbody>
-          </table>
-        </div>
-
-        <button id="modal-add-btn" class="btn btn--primary btn--full">Add to Cart</button>
-      </div>
-    </div>
   </div>
 
   <div id="toast" role="status" aria-live="polite"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="assets/app.js" defer></script>
+  <script src="app.js" defer></script>
 </body>
 
 </html>
