@@ -7,10 +7,7 @@ const STORAGE_KEYS = {
   users: 'Arusuvai:users', // Separate database for users
   favorites: 'Arusuvai:favorites', // User favorites
 };
-
-// Users database structure
-// Stored as: { email: { email, password, role, createdAt } }
-
+ 
 const defaultDishes = [
   {
     id: crypto.randomUUID(),
@@ -380,7 +377,6 @@ const elements = {
   monthlyAmount: document.getElementById('monthly-amount'),
   monthlyCount: document.getElementById('monthly-count'),
   salesChart: document.getElementById('sales-chart'),
-  // Modal Elements
   dishModal: document.getElementById('dish-modal'),
   modalImage: document.getElementById('modal-image'),
   modalTitle: document.getElementById('modal-title'),
@@ -412,8 +408,7 @@ function showSection(targetId) {
   elements.navLinks.forEach((link) => {
     link.classList.toggle('active', link.dataset.section === targetId);
   });
-
-  // Re-render the active section
+  
   if (targetId === 'cart') {
     renderCart();
   } else if (targetId === 'favorites') {
@@ -430,7 +425,7 @@ function showSection(targetId) {
 }
 
 function initNavigation() {
-  // Mobile Menu Logic
+  
   const navbarToggle = document.getElementById('navbar-toggle');
   const navbarLinks = document.getElementById('navbar-links');
 
@@ -439,8 +434,7 @@ function initNavigation() {
       navbarLinks.classList.toggle('active');
       navbarToggle.classList.toggle('active');
     });
-
-    // Close menu when a link is clicked
+    
     navbarLinks.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', () => {
         navbarLinks.classList.remove('active');
@@ -583,8 +577,7 @@ function renderMenu() {
         }
       })
     );
-
-  // Favorite buttons
+  
   if (state.currentRole === 'user') {
     elements.menuGrid.querySelectorAll('[data-action="favorite"]').forEach((node) => {
       node.addEventListener('click', (event) => {
@@ -610,7 +603,6 @@ function showDishDetails(dishId) {
   elements.modalDescription.textContent = dish.description || 'No description available.';
   elements.modalIngredients.textContent = dish.ingredients || 'Ingredients not listed.';
 
-  // Populate Nutrition
   elements.modalNutrition.innerHTML = '';
   if (dish.nutrition) {
     Object.entries(dish.nutrition).forEach(([key, value]) => {
@@ -621,8 +613,7 @@ function showDishDetails(dishId) {
   } else {
     elements.modalNutrition.innerHTML = '<tr><td colspan="2">Nutrition info not available</td></tr>';
   }
-
-  // Setup Add to Cart button
+  
   elements.modalAddBtn.onclick = () => {
     addToCart(dish.id);
     closeModal();
@@ -641,13 +632,11 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-// Initialize Modal Events
 function initModalEvents() {
   elements.modalCloseBtns.forEach((btn) => {
     btn.addEventListener('click', closeModal);
   });
 
-  // Close on escape key
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && elements.dishModal.getAttribute('aria-hidden') === 'false') {
       closeModal();
@@ -655,7 +644,6 @@ function initModalEvents() {
   });
 }
 
-// Call initModalEvents on load
 document.addEventListener('DOMContentLoaded', initModalEvents);
 
 function addToCart(dishId) {
@@ -695,7 +683,7 @@ function renderCart() {
 
   const cartEntries = Object.values(state.cart);
 
-  // Check if cart is empty
+  
   if (cartEntries.length === 0) {
     elements.cartItems.innerHTML = `
       <tr>
@@ -916,7 +904,7 @@ function handleCheckout() {
   renderCart();
   updateCartBadge();
 
-  // Navigate to orders page after checkout to show the new order
+  
   if (state.currentRole === 'user') {
     showSection('orders');
   }
@@ -1036,7 +1024,6 @@ function attachFormHandlers() {
   }
 }
 
-// Authentication Functions
 function handleLogin(event) {
   event.preventDefault();
 
@@ -1048,7 +1035,6 @@ function handleLogin(event) {
     return;
   }
 
-  // Hardcoded Admin Logic
   if (email === 'suriya2274@gmail.com' && password === '12345678') {
     state.currentUser = email;
     state.currentEmail = email;
@@ -1059,7 +1045,6 @@ function handleLogin(event) {
     return;
   }
 
-  // Check if user exists in database
   const user = state.users[email];
   if (!user || user.password !== password) {
     showToast('Invalid email or password. Please sign up if you don\'t have an account.');
@@ -1092,13 +1077,11 @@ function handleSignup(event) {
     return;
   }
 
-  // Check if user already exists
   if (state.users[email]) {
     showToast('Email already registered. Please login instead.');
     return;
   }
 
-  // Create new user account
   state.users[email] = {
     email,
     password,
@@ -1197,7 +1180,7 @@ function updateRoleBasedUI() {
   }
 }
 
-// Favorite Functions
+ 
 function toggleFavorite(dishId) {
   if (!state.currentEmail) return;
 
@@ -1218,7 +1201,7 @@ function toggleFavorite(dishId) {
   persistState();
   renderMenu();
 
-  // Only render favorites if we're on the favorites page, don't navigate away
+  
   const activeSection = document.querySelector('.page-section--active');
   if (activeSection && activeSection.id === 'favorites') {
     renderFavorites();
@@ -1264,7 +1247,7 @@ function renderFavorites() {
     )
     .join('');
 
-  // Add event listeners
+  
   elements.favoritesGrid.querySelectorAll('[data-action="add"]').forEach((node) => {
     node.addEventListener('click', (event) => {
       const card = event.currentTarget.closest('.card');
@@ -1285,7 +1268,7 @@ function renderFavorites() {
   });
 }
 
-// Order Functions
+ 
 function renderOrders() {
   if (!elements.ordersList) return;
 
@@ -1342,7 +1325,7 @@ function renderOrders() {
 function clearOrders() {
   if (!state.currentEmail) return;
 
-  // Filter out orders that belong to the current user
+  
   state.orders = state.orders.filter(
     (order) => order.userId !== state.currentEmail && order.userId !== state.currentUser
   );
@@ -1352,7 +1335,7 @@ function clearOrders() {
   showToast('Order history cleared.');
 }
 
-// Restaurant Status Functions
+ 
 function toggleRestaurantStatus() {
   state.restaurantOpen = !state.restaurantOpen;
   persistState();
@@ -1380,7 +1363,7 @@ function updateRestaurantStatus() {
   }
 }
 
-// Sales Analytics Functions
+ 
 function getTodaySales() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -1543,7 +1526,7 @@ function init() {
   setYear();
   loadState();
 
-  // Check if already logged in
+  
   if (state.currentEmail && state.currentRole) {
     showApp();
   } else {
@@ -1551,7 +1534,7 @@ function init() {
     elements.appContainer.style.display = 'none';
   }
 
-  // Event listeners
+  
   if (elements.loginForm) {
     elements.loginForm.addEventListener('submit', handleLogin);
   }
@@ -1565,7 +1548,7 @@ function init() {
     elements.toggleRestaurantBtn.addEventListener('click', toggleRestaurantStatus);
   }
 
-  // Auth tab switching
+  
   if (elements.authTabs && elements.authTabs.length > 0) {
     elements.authTabs.forEach((tab) => {
       tab.addEventListener('click', () => {
@@ -1574,7 +1557,7 @@ function init() {
     });
   }
 
-  // Sync restaurant status across tabs
+  
   window.addEventListener('storage', (event) => {
     if (event.key === STORAGE_KEYS.restaurantStatus) {
       const isOpen = JSON.parse(event.newValue);

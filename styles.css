@@ -446,7 +446,6 @@ main {
   }
 }
 
-/* Login Page Styles */
 .login-page {
   min-height: 100vh;
   display: flex;
@@ -530,7 +529,6 @@ main {
   color: var(--color-text-muted);
 }
 
-/* Auth Tabs */
 .auth-tabs {
   display: flex;
   gap: 0.5rem;
@@ -565,7 +563,6 @@ main {
   display: block;
 }
 
-/* Card Image Wrapper for Favorites */
 .card__image-wrapper {
   position: relative;
   width: 100%;
@@ -618,7 +615,6 @@ main {
   flex-direction: column;
 }
 
-/* Role-based visibility */
 .user-only,
 .admin-only {
   display: none;
@@ -636,7 +632,6 @@ main {
   display: block;
 }
 
-/* Status Badge */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -663,7 +658,6 @@ main {
   gap: 0.75rem;
 }
 
-/* Orders List */
 .orders-list {
   display: flex;
   flex-direction: column;
@@ -717,7 +711,6 @@ main {
   font-size: 1.1rem;
 }
 
-/* Admin Controls */
 .admin-controls {
   margin-top: 2rem;
 }
@@ -732,7 +725,6 @@ main {
   font-weight: 500;
 }
 
-/* Sales Analytics */
 .sales-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -766,7 +758,6 @@ main {
   margin-top: 1rem;
 }
 
-/* Modal Styles */
 .modal {
   position: fixed;
   top: 0;
